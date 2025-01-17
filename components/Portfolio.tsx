@@ -7,7 +7,7 @@ import { PortfolioProvider } from "./PortfolioContext";
 export function Portfolio() {
   return (
     <PortfolioProvider>
-      <div className="">
+      <div>
         <CityNavigation />
         <PhotoCarousel />
       </div>
