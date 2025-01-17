@@ -7,7 +7,7 @@ import { PortfolioProvider } from "./PortfolioContext";
 export function Portfolio() {
   return (
     <PortfolioProvider>
-      <div className="min-h-screen p-4">
+      <div className="">
         <CityNavigation />
         <PhotoCarousel />
       </div>
