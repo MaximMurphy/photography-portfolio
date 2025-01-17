@@ -13,20 +13,17 @@ export function CityNavigation() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 px-24">
       <motion.h1
         key={cities[currentCityIndex].name}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        className="text-4xl font-bold"
+        className="text-4xl font-base tracking-wider"
       >
         {cities[currentCityIndex].name}
       </motion.h1>
-      <button
-        onClick={navigateToNextCity}
-        className="rounded-full transition-colors"
-      >
+      <button onClick={navigateToNextCity} className="">
         <ChevronDown className="w-8 h-8 mb-8 mt-4" />
       </button>
     </div>

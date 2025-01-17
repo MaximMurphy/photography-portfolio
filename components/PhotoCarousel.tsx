@@ -55,9 +55,9 @@ export function PhotoCarousel() {
   };
 
   return (
-    <div className="relative w-full h-[60vh] overflow-hidden">
+    <div className="relative w-full h-[62vh]">
       {/* Previous Photo Preview */}
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 w-32 h-32 opacity-50 z-10">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-32 h-32 opacity-75 z-10">
         <Image
           src={getPrevPhoto().src || "/placeholder.svg"}
           alt="Previous"
@@ -79,19 +79,19 @@ export function PhotoCarousel() {
             x: { type: "spring", stiffness: 300, damping: 30 },
             opacity: { duration: 0.2 },
           }}
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full"
         >
           <Image
             src={photos[currentPhotoIndex].src || "/placeholder.svg"}
             alt={photos[currentPhotoIndex].alt}
             fill
-            className="object-cover"
+            className="object-scale-down"
           />
         </motion.div>
       </AnimatePresence>
 
       {/* Next Photo Preview */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 w-32 h-32 opacity-50 z-10">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-32 h-32 opacity-75 z-10">
         <Image
           src={getNextPhoto().src || "/placeholder.svg"}
           alt="Next"
@@ -115,7 +115,7 @@ export function PhotoCarousel() {
       </button>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1">
+      <div className="absolute bottom-4 right-4 flex gap-1">
         {photos.map((_, index) => (
           <button
             key={index}
@@ -124,7 +124,7 @@ export function PhotoCarousel() {
               setCurrentPhotoIndex(index);
             }}
             className={`w-1 h-8 ${
-              index === currentPhotoIndex ? "'bg-white'" : "'bg-white/50'"
+              index === currentPhotoIndex ? "bg-white" : "bg-white/50"
             }`}
           />
         ))}
