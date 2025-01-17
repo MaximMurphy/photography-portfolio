@@ -1,4 +1,4 @@
-"'use client'";
+"use client";
 
 import { createContext, useContext, useState } from "react";
 import { CarouselContextType, City } from "../types/portfolio";

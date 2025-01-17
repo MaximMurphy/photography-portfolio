@@ -1,4 +1,4 @@
-"'use client'";
+"use client";
 
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -19,15 +19,15 @@ export function CityNavigation() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        className="text-4xl font-bold mb-8"
+        className="text-4xl font-bold"
       >
         {cities[currentCityIndex].name}
       </motion.h1>
       <button
         onClick={navigateToNextCity}
-        className="mt-4 p-2 rounded-full hover:bg-gray-200 transition-colors"
+        className="rounded-full transition-colors"
       >
-        <ChevronDown className="w-8 h-8" />
+        <ChevronDown className="w-8 h-8 mb-8 mt-4" />
       </button>
     </div>
   );

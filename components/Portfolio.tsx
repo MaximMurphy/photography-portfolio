@@ -1,4 +1,4 @@
-"'use client'";
+"use client";
 
 import { PhotoCarousel } from "./PhotoCarousel";
 import { CityNavigation } from "./CityNavigation";
