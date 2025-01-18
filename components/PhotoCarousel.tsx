@@ -1,12 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useDragControls,
-  PanInfo,
-} from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -18,52 +13,23 @@ export function PhotoCarousel() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
-  const [transitionType, setTransitionType] = useState<"slide" | "fade">(
-    "fade"
-  );
-  const dragControls = useDragControls();
-  const constraintsRef = useRef(null);
 
   const city = cities[currentCityIndex];
   const photos = city.photos;
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.5,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.5,
-    }),
-  };
 
   const fadeVariants = {
     enter: {
       opacity: 0,
     },
     center: {
-      zIndex: 1,
       opacity: 1,
-      scale: 1,
     },
     exit: {
-      zIndex: 0,
       opacity: 0,
     },
   };
 
   const navigate = (newDirection: number) => {
-    setTransitionType("fade");
     setDirection(newDirection);
     // @ts-expect-error - Type mismatch doesnt affect code
     setCurrentPhotoIndex((prev: number) => {
@@ -72,19 +38,6 @@ export function PhotoCarousel() {
       if (nextIndex < 0) return photos.length - 1;
       return nextIndex;
     });
-  };
-
-  const handleDragEnd = (
-    event: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ) => {
-    const threshold = 50;
-    setTransitionType("slide");
-    if (info.offset.x > threshold) {
-      navigate(-1);
-    } else if (info.offset.x < -threshold) {
-      navigate(1);
-    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -97,9 +50,9 @@ export function PhotoCarousel() {
     const x = e.clientX - rect.left;
     const width = rect.width;
 
-    if (x < width * 0.25) {
+    if (x < 192) {
       setHoverZone("prev");
-    } else if (x > width * 0.75) {
+    } else if (x > width - 192) {
       setHoverZone("next");
     } else {
       setHoverZone(null);
@@ -132,53 +85,40 @@ export function PhotoCarousel() {
 
   return (
     <div
-      className="relative w-full h-[64vh] pt-12 border-t border-stone-300"
-      ref={constraintsRef}
+      className="relative w-full h-[64vh] lg:pt-12"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Navigation Zones with Click Handlers */}
-      <div
-        className="absolute left-0 top-0 w-16 lg:w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-300/50 transition-colors duration-200"
-        onClick={() => navigate(-1)}
-        onMouseDown={() => setIsPressed(true)}
-        onMouseUp={() => setIsPressed(false)}
-      />
-      <div
-        className="absolute right-0 top-0 w-16 lg:w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-300/50 transition-colors duration-200"
-        onClick={() => navigate(1)}
-        onMouseDown={() => setIsPressed(true)}
-        onMouseUp={() => setIsPressed(false)}
-      />
+      {/* Navigation Zones with Click Handlers - Desktop Only */}
+      <div className="hidden lg:block">
+        <div
+          className="absolute left-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-300/50 transition-colors duration-200"
+          onClick={() => navigate(-1)}
+          onMouseDown={() => setIsPressed(true)}
+          onMouseUp={() => setIsPressed(false)}
+        />
+        <div
+          className="absolute right-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-300/50 transition-colors duration-200"
+          onClick={() => navigate(1)}
+          onMouseDown={() => setIsPressed(true)}
+          onMouseUp={() => setIsPressed(false)}
+        />
+      </div>
 
       {/* Main Photo Container - Centered with 75% width */}
-      <div className="absolute left-1/2 -translate-x-1/2 w-3/4 h-full">
+      <div className="absolute left-1/2 -translate-x-1/2 w-3/4 h-96 lg:h-full">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentPhotoIndex}
             custom={direction}
-            variants={transitionType === "slide" ? slideVariants : fadeVariants}
+            variants={fadeVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={
-              transitionType === "slide"
-                ? {
-                    x: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 1 },
-                    scale: { duration: 1 },
-                  }
-                : {
-                    opacity: { duration: 0.5 },
-                    scale: { duration: 0.5 },
-                  }
-            }
+            transition={{
+              opacity: { duration: 0.3 },
+            }}
             className="absolute inset-0 w-full"
-            drag="x"
-            dragControls={dragControls}
-            dragConstraints={constraintsRef}
-            dragElastic={0.2}
-            onDragEnd={handleDragEnd}
           >
             <Image
               src={photos[currentPhotoIndex].src || "/placeholder.svg"}
@@ -191,11 +131,27 @@ export function PhotoCarousel() {
         </AnimatePresence>
       </div>
 
-      {/* Cursor Indicators */}
+      {/* Mobile Navigation Buttons */}
+      <div className="lg:hidden absolute bottom-24 left-0 right-0 flex justify-center gap-52 z-30">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 bg-stone-600/50 rounded hover:bg-stone-800/50 transition-colors"
+        >
+          <ChevronLeft className="w-6 h-6 text-white" />
+        </button>
+        <button
+          onClick={() => navigate(1)}
+          className="p-2 bg-stone-600/50 rounded hover:bg-stone-800/50 transition-colors"
+        >
+          <ChevronRight className="w-6 h-6 text-white" />
+        </button>
+      </div>
+
+      {/* Cursor Indicators - Desktop Only */}
       <AnimatePresence>
         {hoverZone && (
           <motion.div
-            className="z-30 fixed text-stone-900 px-3 py-2 rounded pointer-events-none"
+            className="z-30 fixed text-stone-900 px-3 py-2 rounded pointer-events-none hidden lg:block"
             style={{
               left: `${mousePosition.x}px`,
               top: `${mousePosition.y}px`,
@@ -216,8 +172,8 @@ export function PhotoCarousel() {
         )}
       </AnimatePresence>
 
-      {/* Progress Bar */}
-      <div className="z-50 absolute bottom-4 right-72 flex gap-1">
+      {/* Progress Bar - Responsive Position */}
+      <div className="z-50 absolute left-1/2 -translate-x-1/2 flex gap-1 lg:left-auto lg:-translate-x-0 lg:right-72 bottom-24 lg:-bottom-12">
         {photos.map((_, index) => (
           <button
             key={index}

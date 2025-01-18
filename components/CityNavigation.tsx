@@ -19,7 +19,7 @@ export function CityNavigation() {
   };
 
   return (
-    <div className="mt-8 px-8">
+    <div className="mt-8 px-8 pb-4 lg:pb-0 border-b border-stone-300">
       <motion.h1
         key={cities[currentCityIndex].name}
         initial={{ opacity: 0, y: -20 }}
