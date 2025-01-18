@@ -1,5 +1,9 @@
-import { Portfolio } from "@/components/Portfolio";
+import Landing from "@/components/Landing";
 
 export default function Page() {
-  return <Portfolio />;
+  return (
+    <div>
+      <Landing />
+    </div>
+  );
 }
