@@ -5,19 +5,19 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface AnimatedSvgProps {
-  number: number;
+  name: string;
   position: { top: string; left: string };
 }
 
-export default function AnimatedSvg({ number, position }: AnimatedSvgProps) {
+export default function AnimatedSvg({ name, position }: AnimatedSvgProps) {
   const randomOffset = () => ({
-    x: Math.random() * 40 - 20,
-    y: Math.random() * 40 - 20,
+    x: Math.random() * 60 - 40,
+    y: Math.random() * 60 - 40,
   });
 
   return (
     <motion.div
-      className="absolute w-16 h-16 md:w-24 md:h-24"
+      className="absolute w-20 h-20 md:w-32 md:h-32"
       style={position}
       animate={{
         x: [0, randomOffset().x, 0, randomOffset().x, 0],
@@ -29,14 +29,20 @@ export default function AnimatedSvg({ number, position }: AnimatedSvgProps) {
         repeatType: "reverse",
       }}
     >
-      <Link href={`/portfolio/${number}`} className="block w-full h-full">
-        <Image
-          src={`/SVG/${number}.svg`}
-          alt={`SVG ${number}`}
-          width={96}
-          height={96}
-          className="w-full h-full cursor-pointer"
-        />
+      <Link href={`/portfolio/${name}`} className="block w-full h-full">
+        <motion.div
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.25, delay: 0.25 }}
+        >
+          <Image
+            src={`/SVG/${name}.svg`}
+            alt={`SVG ${name}`}
+            width={150}
+            height={150}
+            className="w-full h-full cursor-pointer hover:scale-110 transition duration-500"
+          />
+        </motion.div>
       </Link>
     </motion.div>
   );

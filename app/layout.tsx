@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Raleway } from "next/font/google";
 import "./globals.css";
 
-const font = Figtree({
-  variable: "--font-figtree",
+const font = Raleway({
+  variable: "--font-raleway",
   subsets: ["latin"],
 });
 

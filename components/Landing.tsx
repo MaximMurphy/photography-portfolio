@@ -4,41 +4,185 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import AnimatedSvg from "./AnimatedSVG";
 
-const svgPositions = [
-  { top: "10%", left: "20%" },
-  { top: "20%", left: "80%" },
-  { top: "40%", left: "5%" },
-  { top: "15%", left: "45%" },
-  { top: "60%", left: "85%" },
-  { top: "80%", left: "20%" },
-  { top: "75%", left: "60%" },
+const desktopPositions = [
+  { top: "20%", left: "25%" },
+  { top: "22%", left: "80%" },
+  { top: "40%", left: "8%" },
+  { top: "20%", left: "50%" },
+  { top: "55%", left: "85%" },
+  { top: "60%", left: "28%" },
+  { top: "65%", left: "60%" },
+];
+
+const mobilePositions = [
+  { top: "15%", left: "10%" },
+  { top: "25%", left: "65%" },
+  { top: "35%", left: "20%" },
+  { top: "45%", left: "70%" },
+  { top: "55%", left: "15%" },
+  { top: "65%", left: "60%" },
+  { top: "75%", left: "30%" },
 ];
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   if (!mounted) return null;
 
+  const positions = isMobile ? mobilePositions : desktopPositions;
+
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-stone-500 text-stone-200">
-      {[2, 3, 4, 5, 6, 7, 8].map((num, index) => (
-        <AnimatedSvg key={num} number={num} position={svgPositions[index]} />
+    <div className="relative w-full h-[100dvh] overflow-hidden bg-green-950 text-stone-300">
+      {[
+        "ireland",
+        "uk",
+        "netherlands",
+        "france",
+        "ohio",
+        "california",
+        "maryland",
+      ].map((name, index) => (
+        <AnimatedSvg key={name} name={name} position={positions[index]} />
       ))}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <motion.h1
-          className="text-4xl md:text-6xl font-medium text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          <span className="block">35mm Film Photos</span>
-          <span className="block mt-2">By Maxim Murphy</span>
-        </motion.h1>
-      </div>
+      <motion.h1
+        initial={{ opacity: 0, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5 }}
+        className="h-full"
+      >
+        <div className="h-full flex flex-col justify-between px-4 py-2 text-xl md:text-2xl font-base tracking-widest text-justify">
+          <div className="flex justify-between pb-4 border-b-2 border-stone-300">
+            <span className="hover:text-stone-950 transition duration-500 cursor-default">
+              35
+            </span>
+            <motion.div
+              className="relative cursor-default overflow-hidden"
+              whileHover="expanded"
+              initial="collapsed"
+              animate="collapsed"
+            >
+              <div className="relative flex">
+                <motion.div
+                  className="flex items-center"
+                  variants={{
+                    collapsed: { width: "auto" },
+                    expanded: { width: "auto" },
+                  }}
+                >
+                  <motion.span
+                    variants={{
+                      collapsed: { x: 0 },
+                      expanded: { x: 0 },
+                    }}
+                  >
+                    m
+                  </motion.span>
+                  <motion.span
+                    variants={{
+                      collapsed: { width: 0, x: "100%" },
+                      expanded: { width: "auto", x: 0 },
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    illi
+                  </motion.span>
+                  <motion.span
+                    className="ml-0"
+                    variants={{
+                      collapsed: { x: 0 },
+                      expanded: { x: 0 },
+                    }}
+                  >
+                    m
+                  </motion.span>
+                  <motion.span
+                    variants={{
+                      collapsed: { width: 0, x: "100%" },
+                      expanded: { width: "auto", x: 0 },
+                    }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    eter
+                  </motion.span>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+          <div className="flex justify-between pt-4 border-t-2 border-stone-300">
+            <span className="hover:text-stone-950 transition duration-500 cursor-default">
+              by
+            </span>
+            <motion.div
+              className="relative cursor-default overflow-hidden"
+              whileHover="expanded"
+              initial="collapsed"
+              animate="collapsed"
+            >
+              <div className="relative flex">
+                <motion.div
+                  className="flex items-center"
+                  variants={{
+                    collapsed: { width: "auto" },
+                    expanded: { width: "auto" },
+                  }}
+                >
+                  <motion.span
+                    variants={{
+                      collapsed: { x: 0 },
+                      expanded: { x: 0 },
+                    }}
+                  >
+                    M
+                  </motion.span>
+                  <motion.span
+                    variants={{
+                      collapsed: { width: 0, x: "100%" },
+                      expanded: { width: "auto", x: 0 },
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    axim
+                  </motion.span>
+                  <motion.span
+                    className="ml-0"
+                    variants={{
+                      collapsed: { x: 0 },
+                      expanded: { x: 0 },
+                    }}
+                  >
+                    M
+                  </motion.span>
+                  <motion.span
+                    variants={{
+                      collapsed: { width: 0, x: "100%" },
+                      expanded: { width: "auto", x: 0 },
+                    }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    urphy
+                  </motion.span>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.h1>
     </div>
   );
 }
