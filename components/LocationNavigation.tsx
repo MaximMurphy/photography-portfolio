@@ -24,32 +24,37 @@ export function LocationNavigation() {
   const currentSubLocation = currentLocation.photos[currentPhotoIndex].location;
 
   return (
-    <div className="mt-8 px-8 pb-4 lg:pb-0 border-b border-stone-300">
-      <motion.h1
-        key={currentLocation.name}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        className="text-4xl lg:text-5xl font-base tracking-wider"
-      >
-        {currentLocation.name}
-      </motion.h1>
-      {currentSubLocation && (
-        <motion.p
-          key={currentSubLocation}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-xl text-stone-500 mt-2"
+    <div className="mt-8 px-8 pb-4 lg:pb-0 border-b border-stone-400 text-stone-800">
+      <div className="flex items-center justify-between">
+        <motion.h1
+          key={currentLocation.name}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="text-4xl lg:text-5xl font-base tracking-wider"
         >
-          {currentSubLocation}
-        </motion.p>
-      )}
-      <button
-        onClick={navigateToNextLocation}
-        className="transition-transform hover:translate-y-1"
-      >
-        <ChevronDown className="w-8 h-8 md:mb-8 mt-4" />
-      </button>
+          {currentLocation.name}
+        </motion.h1>
+        {currentSubLocation && (
+          <motion.p
+            key={currentSubLocation}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="text-4xl lg:text-5xl font-base tracking-wider"
+          >
+            {currentSubLocation}
+          </motion.p>
+        )}
+      </div>
+      <div className="flex items-end justify-between md:mb-8 mt-4">
+        <button
+          onClick={navigateToNextLocation}
+          className="transition-transform hover:translate-y-1"
+        >
+          <ChevronDown className="w-8 h-8" />
+        </button>
+      </div>
     </div>
   );
 }

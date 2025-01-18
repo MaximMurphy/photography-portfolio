@@ -91,13 +91,13 @@ export function PhotoCarousel() {
       {/* Navigation Zones with Click Handlers - Desktop Only */}
       <div className="hidden lg:block">
         <div
-          className="absolute left-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-300/50 transition-colors duration-200"
+          className="absolute left-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-400/25 transition-colors duration-200"
           onClick={() => navigate(-1)}
           onMouseDown={() => setIsPressed(true)}
           onMouseUp={() => setIsPressed(false)}
         />
         <div
-          className="absolute right-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-300/50 transition-colors duration-200"
+          className="absolute right-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-400/25 transition-colors duration-200"
           onClick={() => navigate(1)}
           onMouseDown={() => setIsPressed(true)}
           onMouseUp={() => setIsPressed(false)}
