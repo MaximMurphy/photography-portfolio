@@ -1,14 +1,19 @@
 "use client";
 
 import { PhotoCarousel } from "./PhotoCarousel";
-import { CityNavigation } from "./CityNavigation";
+import { LocationNavigation } from "./LocationNavigation";
 import { PortfolioProvider } from "./PortfolioContext";
+import type { Location } from "@/types/portfolio";
 
-export function Portfolio() {
+interface PortfolioProps {
+  initialLocation: Location;
+}
+
+export function Portfolio({ initialLocation }: PortfolioProps) {
   return (
-    <PortfolioProvider>
+    <PortfolioProvider initialLocation={initialLocation}>
       <div>
-        <CityNavigation />
+        <LocationNavigation />
         <PhotoCarousel />
       </div>
     </PortfolioProvider>

@@ -7,15 +7,14 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function PhotoCarousel() {
-  const { currentCityIndex, currentPhotoIndex, setCurrentPhotoIndex, cities } =
+  const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
     usePortfolio();
   const [direction, setDirection] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
 
-  const city = cities[currentCityIndex];
-  const photos = city.photos;
+  const photos = currentLocation.photos;
 
   const fadeVariants = {
     enter: {
@@ -31,8 +30,8 @@ export function PhotoCarousel() {
 
   const navigate = (newDirection: number) => {
     setDirection(newDirection);
-    // @ts-expect-error - Type mismatch doesnt affect code
-    setCurrentPhotoIndex((prev: number) => {
+    //@ts-expect-error - ignore this line
+    setCurrentPhotoIndex((prev) => {
       const nextIndex = prev + newDirection;
       if (nextIndex >= photos.length) return 0;
       if (nextIndex < 0) return photos.length - 1;
@@ -121,9 +120,11 @@ export function PhotoCarousel() {
             className="absolute inset-0 w-full"
           >
             <Image
-              src={photos[currentPhotoIndex].src || "/placeholder.svg"}
+              src={photos[currentPhotoIndex].src}
               alt={photos[currentPhotoIndex].alt}
               fill
+              sizes="(max-width: 768px) 100vw, 75vw"
+              priority={currentPhotoIndex === 0}
               className="object-scale-down"
               draggable={false}
             />

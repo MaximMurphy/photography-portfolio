@@ -2,9 +2,11 @@ export interface Photo {
   src: string;
   alt: string;
   id: number;
+  location?: string; // Optional sub-location within the country
 }
 
-export interface City {
+export interface Location {
+  slug: string;
   name: string;
   photos: Photo[];
 }
@@ -14,5 +16,5 @@ export interface CarouselContextType {
   setCurrentCityIndex: (index: number) => void;
   currentPhotoIndex: number;
   setCurrentPhotoIndex: (index: number) => void;
-  cities: City[];
+  locations: Location[];
 }
