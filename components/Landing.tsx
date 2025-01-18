@@ -62,8 +62,8 @@ export default function Home() {
         transition={{ duration: 1.5 }}
         className="h-full"
       >
-        <div className="h-full flex flex-col justify-between px-4 py-2 text-xl md:text-2xl font-base tracking-widest text-justify">
-          <div className="flex justify-between pb-4 border-b-2 border-stone-300">
+        <div className="h-full flex flex-col justify-between px-2 lg:px-4 py-2 text-xl md:text-2xl font-base tracking-widest text-justify">
+          <div className="flex justify-between pb-2 lg:pb-4 border-b border-stone-300">
             <span className="hover:text-stone-950 transition duration-500 cursor-default">
               35
             </span>
@@ -122,7 +122,7 @@ export default function Home() {
               </div>
             </motion.div>
           </div>
-          <div className="flex justify-between pt-4 border-t-2 border-stone-300">
+          <div className="flex justify-between pt-2 lg:pt-4 border-t border-stone-300">
             <span className="hover:text-stone-950 transition duration-500 cursor-default">
               by
             </span>
