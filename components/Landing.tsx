@@ -8,9 +8,10 @@ const desktopPositions = [
   { top: "20%", left: "25%" },
   { top: "22%", left: "80%" },
   { top: "40%", left: "8%" },
-  { top: "20%", left: "50%" },
-  { top: "55%", left: "85%" },
-  { top: "60%", left: "28%" },
+  { top: "18%", left: "56%" },
+  { top: "45%", left: "40%" },
+  { top: "52%", left: "82%" },
+  { top: "68%", left: "25%" },
   { top: "65%", left: "60%" },
 ];
 
@@ -19,6 +20,7 @@ const mobilePositions = [
   { top: "25%", left: "65%" },
   { top: "35%", left: "20%" },
   { top: "45%", left: "70%" },
+  { top: "50%", left: "50%" },
   { top: "55%", left: "15%" },
   { top: "65%", left: "60%" },
   { top: "75%", left: "30%" },
@@ -51,6 +53,7 @@ export default function Home() {
         "netherlands",
         "france",
         "ohio",
+        "mexico",
         "california",
         "maryland",
       ].map((name, index) => (

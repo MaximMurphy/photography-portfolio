@@ -8,8 +8,8 @@ const font = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Photos by Maxim",
-  description: "Maxim Murphy - Photography Portfolio",
+  title: "35mm Photos - Maxim Murphy",
+  description: "Maxim Murphy's 35mm Photography Portfolio",
 };
 
 export default function RootLayout({
