@@ -26,17 +26,24 @@ export function LocationNavigation() {
   const currentSubLocation = currentLocation.photos[currentPhotoIndex].location;
 
   return (
-    <div className="mt-8 px-8 pb-4 lg:pb-0 border-b border-stone-400 text-stone-800">
+    <div className="mt-8 px-8 pb-4 lg:pb-8 border-b border-stone-400 text-stone-800">
       <div className="flex items-center justify-between">
         <motion.h1
           key={currentLocation.name}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="text-4xl lg:text-5xl font-base tracking-wider"
+          className="flex gap-2 text-4xl lg:text-5xl font-base tracking-wider"
         >
-          {currentLocation.name}
+          <p>{currentLocation.name}</p>
+          <button
+            onClick={navigateToNextLocation}
+            className="transition-transform hover:translate-y-1"
+          >
+            <ChevronDown className="w-8 h-8" />
+          </button>
         </motion.h1>
+
         {/* 
         {currentSubLocation && (
           <motion.p
@@ -52,9 +59,9 @@ export function LocationNavigation() {
           */}
         <motion.h1
           key={"home"}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
         >
           <Link
             href="/"
@@ -63,14 +70,6 @@ export function LocationNavigation() {
             Home
           </Link>
         </motion.h1>
-      </div>
-      <div className="flex items-end justify-between md:mb-8 mt-4">
-        <button
-          onClick={navigateToNextLocation}
-          className="transition-transform hover:translate-y-1"
-        >
-          <ChevronDown className="w-8 h-8" />
-        </button>
       </div>
     </div>
   );

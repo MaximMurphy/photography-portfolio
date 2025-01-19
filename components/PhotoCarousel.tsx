@@ -84,97 +84,123 @@ export function PhotoCarousel() {
 
   return (
     <div
-      className="relative w-full h-[64vh] lg:pt-12"
+      className="h-full flex flex-col"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Navigation Zones with Click Handlers - Desktop Only */}
-      <div className="hidden lg:block">
-        <div
-          className="absolute left-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-400/25 transition-colors duration-200"
-          onClick={() => navigate(-1)}
-          onMouseDown={() => setIsPressed(true)}
-          onMouseUp={() => setIsPressed(false)}
-        />
-        <div
-          className="absolute right-0 top-0 w-48 h-full z-20 mt-12 cursor-none hover:bg-stone-400/25 transition-colors duration-200"
-          onClick={() => navigate(1)}
-          onMouseDown={() => setIsPressed(true)}
-          onMouseUp={() => setIsPressed(false)}
-        />
-      </div>
-
-      {/* Main Photo Container - Centered with 75% width */}
-      <div className="absolute left-1/2 -translate-x-1/2 w-3/4 h-96 lg:h-full">
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={currentPhotoIndex}
-            custom={direction}
-            variants={fadeVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              opacity: { duration: 0.3 },
-            }}
-            className="absolute inset-0 w-full"
-          >
-            <Image
-              src={photos[currentPhotoIndex].src}
-              alt={photos[currentPhotoIndex].alt}
-              fill
-              sizes="(max-width: 768px) 100vw, 75vw"
-              priority={currentPhotoIndex === 0}
-              className="object-scale-down"
-              draggable={false}
+      <div className="flex-1 relative">
+        {/* Main content wrapper with top padding */}
+        <div className="absolute inset-0 pt-2 lg:pt-8">
+          {/* Navigation Zones with Click Handlers - Desktop Only */}
+          <div className="hidden lg:block">
+            <div
+              className="absolute left-0 top-8 w-48 h-[calc(100%-2rem)] z-20 cursor-none hover:bg-stone-400/25 transition-colors duration-200"
+              onClick={() => navigate(-1)}
+              onMouseDown={() => setIsPressed(true)}
+              onMouseUp={() => setIsPressed(false)}
             />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+            <div
+              className="absolute right-0 top-8 w-48 h-[calc(100%-2rem)] z-20 cursor-none hover:bg-stone-400/25 transition-colors duration-200"
+              onClick={() => navigate(1)}
+              onMouseDown={() => setIsPressed(true)}
+              onMouseUp={() => setIsPressed(false)}
+            />
+          </div>
 
-      {/* Mobile Navigation Buttons */}
-      <div className="lg:hidden absolute bottom-24 left-0 right-0 flex justify-center gap-52 z-30">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 bg-stone-600/50 rounded hover:bg-stone-800/50 transition-colors"
-        >
-          <ChevronLeft className="w-6 h-6 text-white" />
-        </button>
-        <button
-          onClick={() => navigate(1)}
-          className="p-2 bg-stone-600/50 rounded hover:bg-stone-800/50 transition-colors"
-        >
-          <ChevronRight className="w-6 h-6 text-white" />
-        </button>
-      </div>
+          {/* Main Photo Container - Centered with 75% width */}
+          <div className="absolute left-1/2 -translate-x-1/2 w-5/6 lg:w-3/4 h-[calc(100%/2)] lg:h-[calc(100%-2rem)] mt-8 lg:mt-0">
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.div
+                key={currentPhotoIndex}
+                custom={direction}
+                variants={fadeVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  opacity: { duration: 0.3 },
+                }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <Image
+                  src={photos[currentPhotoIndex].src}
+                  alt={photos[currentPhotoIndex].alt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 75vw"
+                  priority={currentPhotoIndex === 0}
+                  className="object-scale-down"
+                  draggable={false}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-      {/* Cursor Indicators - Desktop Only */}
-      <AnimatePresence>
-        {hoverZone && (
-          <motion.div
-            className="z-30 fixed text-stone-900 px-3 py-2 rounded pointer-events-none hidden lg:block"
-            style={{
-              left: `${mousePosition.x}px`,
-              top: `${mousePosition.y}px`,
-              transform: "translate(-50%, -50%)",
-            }}
-            initial="initial"
-            animate={isPressed ? "pressed" : "animate"}
-            exit="exit"
-            variants={indicatorVariants}
-            transition={{ duration: 0.2 }}
-          >
-            {hoverZone === "prev" ? (
-              <ChevronLeft className="w-12 h-12" />
-            ) : (
-              <ChevronRight className="w-12 h-12" />
+          {/* Mobile Navigation and Progress Bar Container */}
+          <div className="lg:hidden absolute left-0 right-0 top-[calc(50%+6rem)] flex items-center">
+            <div className="w-full flex justify-between px-8">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 bg-stone-600/50 rounded hover:bg-stone-800/50 transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </button>
+
+              {/* Progress Bar - Centered between navigation buttons */}
+              <div className="flex justify-center gap-1">
+                {photos.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setDirection(index > currentPhotoIndex ? 1 : -1);
+                      setCurrentPhotoIndex(index);
+                    }}
+                    className={`w-1 h-8 ${
+                      index === currentPhotoIndex
+                        ? "bg-stone-100"
+                        : "bg-stone-200"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={() => navigate(1)}
+                className="p-2 bg-stone-600/50 rounded hover:bg-stone-800/50 transition-colors"
+              >
+                <ChevronRight className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Cursor Indicators - Desktop Only */}
+          <AnimatePresence>
+            {hoverZone && (
+              <motion.div
+                className="z-30 fixed text-stone-900 px-3 py-2 rounded pointer-events-none hidden lg:block"
+                style={{
+                  left: `${mousePosition.x}px`,
+                  top: `${mousePosition.y}px`,
+                  transform: "translate(-50%, -50%)",
+                }}
+                initial="initial"
+                animate={isPressed ? "pressed" : "animate"}
+                exit="exit"
+                variants={indicatorVariants}
+                transition={{ duration: 0.2 }}
+              >
+                {hoverZone === "prev" ? (
+                  <ChevronLeft className="w-12 h-12" />
+                ) : (
+                  <ChevronRight className="w-12 h-12" />
+                )}
+              </motion.div>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </AnimatePresence>
+        </div>
+      </div>
 
-      {/* Progress Bar - Responsive Position */}
-      <div className="z-50 absolute left-1/2 -translate-x-1/2 flex gap-1 lg:left-auto lg:-translate-x-0 lg:right-72 bottom-24 lg:-bottom-12">
+      {/* Desktop Progress Bar */}
+      <div className="hidden lg:flex justify-center gap-1 py-4">
         {photos.map((_, index) => (
           <button
             key={index}
@@ -183,7 +209,7 @@ export function PhotoCarousel() {
               setCurrentPhotoIndex(index);
             }}
             className={`w-1 h-8 ${
-              index === currentPhotoIndex ? "bg-white" : "bg-white/50"
+              index === currentPhotoIndex ? "bg-stone-100" : "bg-stone-200"
             }`}
           />
         ))}
