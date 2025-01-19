@@ -12,7 +12,7 @@ interface PortfolioProps {
 export function Portfolio({ initialLocation }: PortfolioProps) {
   return (
     <PortfolioProvider initialLocation={initialLocation}>
-      <div className="h-screen flex flex-col">
+      <div className="h-screen flex flex-col overflow-hidden">
         <LocationNavigation />
         <div className="flex-1 relative">
           <PhotoCarousel />
