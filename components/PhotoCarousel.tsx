@@ -225,7 +225,7 @@ export function PhotoCarousel() {
 
       {/* Desktop Progress Bar */}
       <div className="hidden lg:flex items-center justify-center py-4">
-        <div className="w-64 flex justify-between">
+        <div className="w-1/2 flex justify-between">
           {photos.map((_, index) => (
             <button
               key={index}

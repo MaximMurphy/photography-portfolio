@@ -79,6 +79,138 @@ const locations: Location[] = [
       },
     ],
   },
+  {
+    slug: "maryland",
+    name: "Maryland",
+    photos: [
+      {
+        src: "/images/maryland/maryland_1.jpg",
+        alt: "Maryland",
+        id: 1,
+        location: "Maryland",
+      },
+      {
+        src: "/images/maryland/maryland_2.jpg",
+        alt: "Maryland",
+        id: 2,
+        location: "Maryland",
+      },
+      {
+        src: "/images/maryland/maryland_3.jpg",
+        alt: "Maryland",
+        id: 3,
+        location: "Maryland",
+      },
+      {
+        src: "/images/maryland/maryland_4.jpg",
+        alt: "Maryland",
+        id: 4,
+        location: "Maryland",
+      },
+      {
+        src: "/images/maryland/maryland_5.jpg",
+        alt: "Maryland",
+        id: 5,
+        location: "Maryland",
+      },
+      {
+        src: "/images/maryland/maryland_6.jpg",
+        alt: "Maryland",
+        id: 6,
+        location: "Maryland",
+      },
+    ],
+  },
+  {
+    slug: "california",
+    name: "California",
+    photos: [
+      {
+        src: "/images/california/california_1.jpg",
+        alt: "California",
+        id: 1,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_2.jpg",
+        alt: "California",
+        id: 2,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_3.jpg",
+        alt: "California",
+        id: 3,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_4.jpg",
+        alt: "California",
+        id: 4,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_5.jpg",
+        alt: "California",
+        id: 5,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_6.jpg",
+        alt: "California",
+        id: 6,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_7.jpg",
+        alt: "California",
+        id: 7,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_8.jpg",
+        alt: "California",
+        id: 8,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_9.jpg",
+        alt: "California",
+        id: 9,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_10.jpg",
+        alt: "California",
+        id: 10,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_11.jpg",
+        alt: "California",
+        id: 11,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_12.jpg",
+        alt: "California",
+        id: 12,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_13.jpg",
+        alt: "California",
+        id: 13,
+        location: "California",
+      },
+      {
+        src: "/images/california/california_14.jpg",
+        alt: "California",
+        id: 14,
+        location: "California",
+      },
+    ],
+  },
   // Add more countries as needed
 ];
 
