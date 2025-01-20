@@ -233,7 +233,7 @@ export function PhotoCarousel() {
                 setDirection(index > currentPhotoIndex ? 1 : -1);
                 setCurrentPhotoIndex(index);
               }}
-              className={`w-full h-4 ${
+              className={`w-full h-2 ${
                 index === currentPhotoIndex
                   ? "bg-stone-100/80"
                   : "bg-stone-200/80"

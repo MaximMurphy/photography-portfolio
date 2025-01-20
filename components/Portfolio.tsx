@@ -4,6 +4,7 @@ import { PhotoCarousel } from "./PhotoCarousel";
 import { LocationNavigation } from "./LocationNavigation";
 import { PortfolioProvider } from "./PortfolioContext";
 import type { Location } from "@/types/portfolio";
+import PhotoCarouselFooter from "./PhotoCarouselFooter";
 
 interface PortfolioProps {
   initialLocation: Location;
@@ -17,6 +18,7 @@ export function Portfolio({ initialLocation }: PortfolioProps) {
         <div className="flex-1 relative">
           <PhotoCarousel />
         </div>
+        <PhotoCarouselFooter />
       </div>
     </PortfolioProvider>
   );
