@@ -179,8 +179,8 @@ export function PhotoCarousel() {
                       }}
                       className={`w-full ${
                         index === currentPhotoIndex
-                          ? "bg-stone-100/80"
-                          : "bg-stone-200/80"
+                          ? "bg-stone-400/30"
+                          : "bg-stone-400/10"
                       } h-full`}
                     />
                   ))}
@@ -235,8 +235,8 @@ export function PhotoCarousel() {
               }}
               className={`w-full h-2 ${
                 index === currentPhotoIndex
-                  ? "bg-stone-100/80"
-                  : "bg-stone-200/80"
+                  ? "bg-stone-400/30"
+                  : "bg-stone-400/10"
               }`}
             />
           ))}
