@@ -17,7 +17,7 @@ export default function AnimatedSvg({ name, position }: AnimatedSvgProps) {
 
   return (
     <motion.div
-      className="absolute w-20 h-20 md:w-32 md:h-32"
+      className="absolute w-20 h-20 md:w-40 md:h-40"
       style={position}
       animate={{
         x: [0, randomOffset().x, 0, randomOffset().x, 0],
