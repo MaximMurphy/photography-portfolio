@@ -1,70 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { type Photo } from "@/types/portfolio";
-
-interface ImageLoaderProps {
-  photos: Photo[];
-  onLoadComplete: () => void;
-  onError: (error: string) => void;
-}
-
-function ImageLoader({ photos, onLoadComplete, onError }: ImageLoaderProps) {
-  useEffect(() => {
-    let mounted = true;
-
-    const preloadImages = async () => {
-      const imagePromises = photos.map((photo) => {
-        return new Promise((resolve, reject) => {
-          const img = new window.Image();
-
-          img.onload = () => {
-            console.log(`Successfully loaded: ${photo.src}`);
-            resolve(img);
-          };
-
-          img.onerror = (e) => {
-            console.error(`Failed to load image ${photo.src}:`, e);
-            reject(new Error(`Failed to load ${photo.src}`));
-          };
-
-          // Set crossOrigin to allow loading from S3
-          img.crossOrigin = "anonymous";
-          img.src = photo.src;
-        });
-      });
-
-      try {
-        await Promise.all(imagePromises);
-        if (mounted) {
-          console.log("All images loaded successfully");
-          onLoadComplete();
-        }
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "Unknown error loading images";
-        console.error("Failed to load images:", errorMessage);
-        if (mounted) {
-          onError(errorMessage);
-        }
-      }
-    };
-
-    preloadImages();
-
-    return () => {
-      mounted = false;
-    };
-  }, [photos, onLoadComplete, onError]);
-
-  return null;
-}
+import PixelatedLoader from "./PixelatedLoader";
+import ImageLoader from "./ImageLoader";
 
 export function PhotoCarousel() {
   const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
@@ -185,8 +127,7 @@ export function PhotoCarousel() {
   if (!imagesLoaded) {
     return (
       <div className="flex items-center justify-center h-full flex-col gap-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-stone-900" />
-        <p className="text-stone-600">Loading images...</p>
+        <PixelatedLoader />
         <ImageLoader
           photos={photos}
           onLoadComplete={handleImagesLoaded}
@@ -239,9 +180,9 @@ export function PhotoCarousel() {
                 <Image
                   src={photos[currentPhotoIndex].src}
                   alt={photos[currentPhotoIndex].alt}
+                  sizes="(min-width: 1024px) 75vw, 100vw"
                   fill
-                  sizes="(max-width: 768px) 100vw, 75vw"
-                  priority={currentPhotoIndex === 0}
+                  priority={true}
                   className="object-scale-down"
                   draggable={false}
                 />

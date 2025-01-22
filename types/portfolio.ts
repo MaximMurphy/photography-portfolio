@@ -18,3 +18,9 @@ export interface CarouselContextType {
   setCurrentPhotoIndex: (index: number) => void;
   locations: Location[];
 }
+
+export interface ImageLoaderProps {
+  photos: Photo[];
+  onLoadComplete: () => void;
+  onError: (error: string) => void;
+}
