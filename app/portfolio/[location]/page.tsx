@@ -11,15 +11,23 @@ interface PageProps {
 export async function generateStaticParams() {
   return [
     { location: "ireland" },
+    { location: "mexico" },
+    { location: "maryand" },
+    { location: "california" },
+    { location: "ohio" },
+    { location: "uk" },
+    { location: "france" },
+
     // Add more locations as needed
   ];
 }
 
-export default async function LocationPortfolioPage({ params }: PageProps) {
+export default async function LocationPortfolioPage(props: PageProps) {
+  const params = await props.params;
+  const location = params.location;
+
   try {
-    const locationData = await Promise.resolve(
-      getLocationData(params.location)
-    );
+    const locationData = getLocationData(location);
 
     if (!locationData) {
       notFound();
