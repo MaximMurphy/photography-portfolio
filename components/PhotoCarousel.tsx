@@ -1,10 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { type Photo } from "@/types/portfolio";
+
+interface ImageLoaderProps {
+  photos: Photo[];
+  onLoadComplete: () => void;
+  onError: (error: string) => void;
+}
+
+function ImageLoader({ photos, onLoadComplete, onError }: ImageLoaderProps) {
+  useEffect(() => {
+    let mounted = true;
+
+    const preloadImages = async () => {
+      const imagePromises = photos.map((photo) => {
+        return new Promise((resolve, reject) => {
+          const img = new window.Image();
+
+          img.onload = () => {
+            console.log(`Successfully loaded: ${photo.src}`);
+            resolve(img);
+          };
+
+          img.onerror = (e) => {
+            console.error(`Failed to load image ${photo.src}:`, e);
+            reject(new Error(`Failed to load ${photo.src}`));
+          };
+
+          // Set crossOrigin to allow loading from S3
+          img.crossOrigin = "anonymous";
+          img.src = photo.src;
+        });
+      });
+
+      try {
+        await Promise.all(imagePromises);
+        if (mounted) {
+          console.log("All images loaded successfully");
+          onLoadComplete();
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Unknown error loading images";
+        console.error("Failed to load images:", errorMessage);
+        if (mounted) {
+          onError(errorMessage);
+        }
+      }
+    };
+
+    preloadImages();
+
+    return () => {
+      mounted = false;
+    };
+  }, [photos, onLoadComplete, onError]);
+
+  return null;
+}
 
 export function PhotoCarousel() {
   const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
@@ -13,8 +73,20 @@ export function PhotoCarousel() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadingError, setLoadingError] = useState<string | null>(null);
 
   const photos = currentLocation.photos;
+
+  const handleImagesLoaded = () => {
+    setImagesLoaded(true);
+    setLoadingError(null);
+  };
+
+  const handleLoadError = (error: string) => {
+    setLoadingError(error);
+    setImagesLoaded(false);
+  };
 
   const fadeVariants = {
     enter: {
@@ -30,8 +102,8 @@ export function PhotoCarousel() {
 
   const navigate = (newDirection: number) => {
     setDirection(newDirection);
-    //@ts-expect-error - ignore this line
-    setCurrentPhotoIndex((prev) => {
+    //@ts-expect-error - TS doesn't like the function signature
+    setCurrentPhotoIndex((prev: number) => {
       const nextIndex = prev + newDirection;
       if (nextIndex >= photos.length) return 0;
       if (nextIndex < 0) return photos.length - 1;
@@ -41,8 +113,6 @@ export function PhotoCarousel() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
-
-    // Get mouse coordinates relative to the container
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
@@ -52,30 +122,21 @@ export function PhotoCarousel() {
     });
 
     const width = rect.width;
-    const ZONE_WIDTH = 208; // 52rem (w-52)
-    const TOP_OFFSET = 32; // 8rem (lg:pt-8)
+    const ZONE_WIDTH = 208;
+    const TOP_OFFSET = 32;
     const zoneHeight = rect.height - TOP_OFFSET;
-
-    // Calculate the navigation zone boundaries based on the UI structure
     const zoneTop = TOP_OFFSET;
-    const zoneBottom = zoneHeight - TOP_OFFSET; // Account for the h-[calc(100%-2rem)]
+    const zoneBottom = zoneHeight - TOP_OFFSET;
 
-    // Check if we're in the navigation area
     if (mouseY >= zoneTop && mouseY <= zoneBottom) {
-      // Left (prev) zone
       if (mouseX >= 0 && mouseX <= ZONE_WIDTH) {
         setHoverZone("prev");
-      }
-      // Right (next) zone
-      else if (mouseX >= width - ZONE_WIDTH && mouseX <= width) {
+      } else if (mouseX >= width - ZONE_WIDTH && mouseX <= width) {
         setHoverZone("next");
-      }
-      // Middle (no hover) zone
-      else {
+      } else {
         setHoverZone(null);
       }
     } else {
-      // Outside vertical bounds
       setHoverZone(null);
     }
   };
@@ -103,6 +164,37 @@ export function PhotoCarousel() {
       scale: 0.5,
     },
   };
+
+  if (loadingError) {
+    return (
+      <div className="flex items-center justify-center h-full flex-col gap-4">
+        <p className="text-red-500">Error loading images: {loadingError}</p>
+        <button
+          onClick={() => {
+            setLoadingError(null);
+            setImagesLoaded(false);
+          }}
+          className="px-4 py-2 bg-stone-800 text-white rounded hover:bg-stone-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!imagesLoaded) {
+    return (
+      <div className="flex items-center justify-center h-full flex-col gap-4">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-stone-900" />
+        <p className="text-stone-600">Loading images...</p>
+        <ImageLoader
+          photos={photos}
+          onLoadComplete={handleImagesLoaded}
+          onError={handleLoadError}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
