@@ -180,6 +180,7 @@ export function PhotoCarousel() {
                 <Image
                   src={photos[currentPhotoIndex].src}
                   alt={photos[currentPhotoIndex].alt}
+                  crossOrigin="anonymous"
                   sizes="(min-width: 1024px) 75vw, 100vw"
                   fill
                   priority={true}
