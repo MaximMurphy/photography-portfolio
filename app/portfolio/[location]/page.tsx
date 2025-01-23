@@ -1,12 +1,7 @@
 import { getLocationData } from "@/lib/locations";
 import { Portfolio } from "@/components/Portfolio";
 import { notFound } from "next/navigation";
-
-interface PageProps {
-  params: {
-    location: string;
-  };
-}
+import type { PageProps } from "@/types/portfolio";
 
 export default async function LocationPortfolioPage(props: PageProps) {
   const params = await props.params;

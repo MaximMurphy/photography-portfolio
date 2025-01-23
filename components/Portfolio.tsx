@@ -3,12 +3,8 @@
 import { PhotoCarousel } from "./PhotoCarousel";
 import { LocationNavigation } from "./LocationNavigation";
 import { PortfolioProvider } from "./PortfolioContext";
-import type { Location } from "@/types/portfolio";
+import type { PortfolioProps } from "@/types/portfolio";
 import PhotoCarouselFooter from "./PhotoCarouselFooter";
-
-interface PortfolioProps {
-  initialLocation: Location;
-}
 
 export function Portfolio({ initialLocation }: PortfolioProps) {
   return (

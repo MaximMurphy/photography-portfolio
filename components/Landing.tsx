@@ -16,12 +16,12 @@ const desktopPositions = [
 
 const mobilePositions = [
   { top: "15%", left: "10%" },
-  { top: "25%", left: "65%" },
-  { top: "45%", left: "70%" },
-  { top: "50%", left: "50%" },
-  { top: "55%", left: "15%" },
-  { top: "65%", left: "60%" },
-  { top: "75%", left: "30%" },
+  { top: "20%", left: "70%" },
+  { top: "50%", left: "70%" },
+  { top: "35%", left: "35%" },
+  { top: "55%", left: "10%" },
+  { top: "72%", left: "60%" },
+  { top: "75%", left: "15%" },
 ];
 
 export default function Home() {

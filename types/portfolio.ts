@@ -11,12 +11,20 @@ export interface Location {
   photos: Photo[];
 }
 
-export interface CarouselContextType {
-  currentCityIndex: number;
-  setCurrentCityIndex: (index: number) => void;
+export interface PageProps {
+  params: {
+    location: string;
+  };
+}
+
+export interface PortfolioProps {
+  initialLocation: Location;
+}
+
+export interface PortfolioContextType {
+  currentLocation: Location;
   currentPhotoIndex: number;
   setCurrentPhotoIndex: (index: number) => void;
-  locations: Location[];
 }
 
 export interface ImageLoaderProps {

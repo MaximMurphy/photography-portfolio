@@ -1,13 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import type { Location } from "@/types/portfolio";
-
-interface PortfolioContextType {
-  currentLocation: Location;
-  currentPhotoIndex: number;
-  setCurrentPhotoIndex: (index: number) => void;
-}
+import type { Location, PortfolioContextType } from "@/types/portfolio";
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(
   undefined
