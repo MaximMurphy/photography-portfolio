@@ -9,7 +9,7 @@ const desktopPositions = [
   { top: "22%", left: "80%" },
   { top: "18%", left: "56%" },
   { top: "42%", left: "35%" },
-  { top: "52%", left: "82%" },
+  { top: "58%", left: "80%" },
   { top: "60%", left: "15%" },
   { top: "65%", left: "55%" },
 ];
