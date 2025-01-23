@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const S3_BUCKET_URL = process.env.NEXT_PUBLIC_S3_BUCKET_URL;
+const S3_BUCKET_URL = "https://35mm-images.s3.us-east-2.amazonaws.com";
 
 const nextConfig: NextConfig = {
   /* config options here */
