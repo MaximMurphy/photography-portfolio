@@ -3,6 +3,7 @@ export interface Photo {
   alt: string;
   id: number;
   location?: string; // Optional sub-location within the country
+  preloaded: boolean;
 }
 
 export interface Location {

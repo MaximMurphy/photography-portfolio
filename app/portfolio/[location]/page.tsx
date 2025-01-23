@@ -5,12 +5,10 @@ import { notFound } from "next/navigation";
 export default async function Page({
   params,
 }: {
-  params: Promise<{ location: string }>;
+  params: { location: string };
 }) {
-  const location = (await params).location;
-
   try {
-    const locationData = getLocationData(location);
+    const locationData = await getLocationData((await params).location);
 
     if (!locationData) {
       notFound();
@@ -21,4 +19,18 @@ export default async function Page({
     console.error("Error loading location data:", error);
     notFound();
   }
+}
+
+// Add metadata generation
+export async function generateMetadata({
+  params,
+}: {
+  params: { location: string };
+}) {
+  const locationData = await getLocationData((await params).location);
+
+  return {
+    title: `${locationData?.name || "Location"} Portfolio`,
+    description: `Photography portfolio of ${locationData?.name || "location"}`,
+  };
 }

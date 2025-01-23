@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PixelatedLoader from "./PixelatedLoader";
-import ImageLoader from "./ImageLoader";
 
 export function PhotoCarousel() {
   const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
@@ -15,20 +14,10 @@ export function PhotoCarousel() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [loadingError, setLoadingError] = useState<string | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
 
   const photos = currentLocation.photos;
-
-  const handleImagesLoaded = () => {
-    setImagesLoaded(true);
-    setLoadingError(null);
-  };
-
-  const handleLoadError = (error: string) => {
-    setLoadingError(error);
-    setImagesLoaded(false);
-  };
 
   const fadeVariants = {
     enter: {
@@ -44,6 +33,7 @@ export function PhotoCarousel() {
 
   const navigate = (newDirection: number) => {
     setDirection(newDirection);
+    setLoadStartTime(Date.now());
     //@ts-expect-error - TS doesn't like the function signature
     setCurrentPhotoIndex((prev: number) => {
       const nextIndex = prev + newDirection;
@@ -52,6 +42,26 @@ export function PhotoCarousel() {
       return nextIndex;
     });
   };
+
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+    setLoadStartTime(null);
+  };
+
+  // Effect to manage loading state based on time
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (loadStartTime) {
+      timeoutId = setTimeout(() => {
+        setIsImageLoading(true);
+      }, 500); // Delay before showing loader
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loadStartTime]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -107,36 +117,6 @@ export function PhotoCarousel() {
     },
   };
 
-  if (loadingError) {
-    return (
-      <div className="flex items-center justify-center h-full flex-col gap-4">
-        <p className="text-red-500">Error loading images: {loadingError}</p>
-        <button
-          onClick={() => {
-            setLoadingError(null);
-            setImagesLoaded(false);
-          }}
-          className="px-4 py-2 bg-stone-800 text-white rounded hover:bg-stone-700"
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  if (!imagesLoaded) {
-    return (
-      <div className="flex items-center justify-center h-full flex-col gap-4">
-        <PixelatedLoader />
-        <ImageLoader
-          photos={photos}
-          onLoadComplete={handleImagesLoaded}
-          onError={handleLoadError}
-        />
-      </div>
-    );
-  }
-
   return (
     <div
       className="h-full flex flex-col"
@@ -163,29 +143,33 @@ export function PhotoCarousel() {
           </div>
 
           {/* Main Photo Container - Centered with 75% width */}
-          <div className="absolute left-1/2 -translate-x-1/2 w-5/6 lg:w-3/4 h-[calc(100%/2)] lg:h-[calc(100%-2rem)] mt-8 lg:mt-0">
+          {isImageLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center">
+              <PixelatedLoader />
+            </div>
+          )}
+          <div className="z-20 absolute left-1/2 -translate-x-1/2 w-5/6 lg:w-3/4 h-[calc(100%/2)] lg:h-[calc(100%-2rem)] mt-8 lg:mt-0">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={currentPhotoIndex}
-                custom={direction}
                 variants={fadeVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  opacity: { duration: 0.3 },
-                }}
+                transition={{ opacity: { duration: 0.3 } }}
                 className="absolute inset-0 w-full h-full"
               >
                 <Image
                   src={photos[currentPhotoIndex].src}
                   alt={photos[currentPhotoIndex].alt}
-                  crossOrigin="anonymous"
-                  sizes="(min-width: 1024px) 75vw, 100vw"
                   fill
-                  priority={true}
+                  priority
+                  sizes="(min-width: 1024px) 75vw, 100vw"
                   className="object-scale-down"
                   draggable={false}
+                  onLoadingComplete={handleImageLoad}
+                  placeholder="blur"
+                  blurDataURL={`${photos[currentPhotoIndex].src}?w=10&h=10&blur=20`}
                 />
               </motion.div>
             </AnimatePresence>
