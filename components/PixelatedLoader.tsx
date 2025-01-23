@@ -1,23 +1,26 @@
 import { motion } from "framer-motion";
 
 export default function PixelatedLoader() {
-  // Create a 10x10 grid of squares
-  const squares = Array.from({ length: 100 });
+  const squares = [
+    { id: 0, initialDelay: 0 }, // Top-left
+    { id: 1, initialDelay: 0.25 }, // Top-right
+    { id: 3, initialDelay: 0.75 }, // Bottom-left
+    { id: 2, initialDelay: 0.5 }, // Bottom-right
+  ];
 
   return (
-    <div className="relative w-64 h-64">
-      <div className="grid grid-cols-10 gap-1">
-        {squares.map((_, i) => (
+    <div className="relative w-36 lg:w-48 h-36 lg:h-48">
+      <div className="grid grid-cols-2 gap-2">
+        {squares.map(({ id, initialDelay }) => (
           <motion.div
-            key={i}
-            className="w-full pt-[100%] bg-stone-900"
-            initial={{ opacity: 0.1 }}
-            animate={{ opacity: [0.1, 1, 0.1] }}
+            key={id}
+            className="w-full pt-[100%] bg-stone-800"
+            animate={{ opacity: [0.25, 0.75, 0.25] }}
             transition={{
               repeat: Number.POSITIVE_INFINITY,
-              duration: 1.5,
+              duration: 1,
               ease: "easeInOut",
-              delay: Math.random() * 0.5, // Randomize the start time for each square
+              delay: initialDelay,
             }}
           />
         ))}

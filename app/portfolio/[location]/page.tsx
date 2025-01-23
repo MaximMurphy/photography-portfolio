@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import { getLocationData } from "@/lib/locations";
 import { Portfolio } from "@/components/Portfolio";
 import { notFound } from "next/navigation";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 interface PageProps {
   params: {
@@ -21,11 +19,7 @@ export default async function LocationPortfolioPage(props: PageProps) {
       notFound();
     }
 
-    return (
-      <Suspense fallback={<LoadingSpinner />}>
-        <Portfolio initialLocation={locationData} />
-      </Suspense>
-    );
+    return <Portfolio initialLocation={locationData} />;
   } catch (error) {
     console.error("Error loading location data:", error);
     notFound();
