@@ -27,14 +27,14 @@ export function LocationNavigation() {
 
   return (
     <div className="px-2 lg:px-4 py-2 text-xl md:text-2xl font-base tracking-widest text-stone-800">
-      <div className="pb-2  border-b border-stone-400">
+      <div className="pb-2 lg:pb-4 border-b border-stone-400">
         <div className="flex items-center justify-between">
           <h1>
             <Link href="/" className="">
               Home
             </Link>
           </h1>
-          <div className="flex gap-1">
+          <div className="flex gap-1 items-center">
             <motion.h1
               key={currentLocation.name}
               initial={{ opacity: 0, y: -20 }}
@@ -48,12 +48,13 @@ export function LocationNavigation() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              className="flex items-center"
             >
               <button
                 onClick={navigateToNextLocation}
                 className="transition-transform hover:translate-y-[2px]"
               >
-                <ChevronDown className="w-8 h-8" strokeWidth={1} />
+                <ChevronDown className="w-6 h-6" strokeWidth={1} />
               </button>
             </motion.h2>
           </div>
