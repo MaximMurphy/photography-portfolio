@@ -10,7 +10,7 @@ export default function PixelatedLoader() {
 
   return (
     <div className="relative w-24 lg:w-48 h-24 lg:h-48">
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-1 lg:gap-2">
         {squares.map(({ id, initialDelay }) => (
           <motion.div
             key={id}
