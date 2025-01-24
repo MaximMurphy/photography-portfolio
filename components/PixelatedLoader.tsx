@@ -9,13 +9,13 @@ export default function PixelatedLoader() {
   ];
 
   return (
-    <div className="relative w-12 lg:w-48 h-12 lg:h-48">
+    <div className="relative w-24 lg:w-48 h-24 lg:h-48">
       <div className="grid grid-cols-2 gap-2">
         {squares.map(({ id, initialDelay }) => (
           <motion.div
             key={id}
-            className="w-full pt-[100%] bg-stone-800"
-            animate={{ opacity: [0.25, 0.75, 0.25] }}
+            className="w-full pt-[100%] bg-stone-400"
+            animate={{ opacity: [0.1, 0.3, 0.2] }}
             transition={{
               repeat: Number.POSITIVE_INFINITY,
               duration: 1,

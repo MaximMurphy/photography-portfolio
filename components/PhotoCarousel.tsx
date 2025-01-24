@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -10,6 +10,7 @@ import PixelatedLoader from "./PixelatedLoader";
 export function PhotoCarousel() {
   const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
     usePortfolio();
+  const [direction, setDirection] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
@@ -24,6 +25,9 @@ export function PhotoCarousel() {
   };
 
   const navigate = (newDirection: number) => {
+    setDirection(newDirection);
+    setIsImageLoading(true);
+
     //@ts-expect-error - TS doenst like the number type here
     setCurrentPhotoIndex((prev: number) => {
       const nextIndex = prev + newDirection;
@@ -31,6 +35,26 @@ export function PhotoCarousel() {
       if (nextIndex < 0) return photos.length - 1;
       return nextIndex;
     });
+  };
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const handleDragEnd = (
+    e: MouseEvent | TouchEvent | PointerEvent,
+    { offset, velocity }: PanInfo
+  ) => {
+    const swipe = swipePower(offset.x, velocity.x);
+
+    if (swipe < -swipeConfidenceThreshold) {
+      // Swipe left, go to next
+      navigate(1);
+    } else if (swipe > swipeConfidenceThreshold) {
+      // Swipe right, go to previous
+      navigate(-1);
+    }
   };
 
   const handleImageLoad = () => {
@@ -102,13 +126,13 @@ export function PhotoCarousel() {
         {/* Navigation Zones with Click Handlers - Desktop Only */}
         <div className="hidden lg:block">
           <div
-            className="absolute left-0 top-0 w-52 h-full z-20 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
+            className="absolute left-0 top-8 w-52 h-[calc(100%-2rem)] z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
             onClick={() => navigate(-1)}
             onMouseDown={() => setIsPressed(true)}
             onMouseUp={() => setIsPressed(false)}
           />
           <div
-            className="absolute right-0 top-0 w-52 h-full z-20 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
+            className="absolute right-0 top-8 w-52 h-[calc(100%-2rem)] z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
             onClick={() => navigate(1)}
             onMouseDown={() => setIsPressed(true)}
             onMouseUp={() => setIsPressed(false)}
@@ -117,12 +141,12 @@ export function PhotoCarousel() {
 
         {/* Main Photo Container */}
         {isImageLoading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <div className="absolute inset-0 z-10 h-[calc(100%-2rem)] lg:h-full flex items-center justify-center">
             <PixelatedLoader />
           </div>
         )}
-        <div className="relative w-full h-[calc(100%-2rem)] max-h-[80vh] lg:h-full flex items-center justify-center border border-red-500">
-          <AnimatePresence initial={false}>
+        <div className="z-20 relative w-full h-[calc(100%-2rem)] max-h-[80vh] lg:h-full flex items-center justify-center">
+          <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentPhotoIndex}
               variants={fadeVariants}
@@ -130,6 +154,10 @@ export function PhotoCarousel() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.3 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={handleDragEnd}
               className="absolute w-5/6 lg:w-3/4 h-full"
             >
               <Image
@@ -154,7 +182,10 @@ export function PhotoCarousel() {
             {photos.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentPhotoIndex(index)}
+                onClick={() => {
+                  setDirection(index > currentPhotoIndex ? 1 : -1);
+                  setCurrentPhotoIndex(index);
+                }}
                 className={`w-full h-6 ${
                   index === currentPhotoIndex
                     ? "bg-stone-400/30"
@@ -197,7 +228,10 @@ export function PhotoCarousel() {
           {photos.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentPhotoIndex(index)}
+              onClick={() => {
+                setDirection(index > currentPhotoIndex ? 1 : -1);
+                setCurrentPhotoIndex(index);
+              }}
               className={`w-full h-2 ${
                 index === currentPhotoIndex
                   ? "bg-stone-400/30"
