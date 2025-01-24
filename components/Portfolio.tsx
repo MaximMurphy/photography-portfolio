@@ -9,11 +9,9 @@ import PhotoCarouselFooter from "./PhotoCarouselFooter";
 export function Portfolio({ initialLocation }: PortfolioProps) {
   return (
     <PortfolioProvider initialLocation={initialLocation}>
-      <div className="h-screen flex flex-col overflow-hidden">
+      <div className="h-screen flex flex-col">
         <LocationNavigation />
-        <div className="flex-1 relative">
-          <PhotoCarousel />
-        </div>
+        <PhotoCarousel />
         <PhotoCarouselFooter />
       </div>
     </PortfolioProvider>

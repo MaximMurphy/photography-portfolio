@@ -18,7 +18,7 @@ export default function PixelatedLoader() {
             animate={{ opacity: [0.1, 0.3, 0.2] }}
             transition={{
               repeat: Number.POSITIVE_INFINITY,
-              duration: 1,
+              duration: 0.75,
               ease: "easeInOut",
               delay: initialDelay,
             }}

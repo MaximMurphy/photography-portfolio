@@ -19,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${font.variable} antialiased h-full overflow-hidden`}>
+      <body
+        className={`${font.variable} antialiased h-screen lg:overflow-hidden`}
+      >
         {children}
       </body>
     </html>

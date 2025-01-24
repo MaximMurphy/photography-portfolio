@@ -117,35 +117,19 @@ export function PhotoCarousel() {
 
   return (
     <div
-      className="relative w-full h-full flex flex-col"
+      className="relative w-full h-full flex flex-col lg:gap-12"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* Main content wrapper */}
       <div className="relative h-full">
-        {/* Navigation Zones with Click Handlers - Desktop Only */}
-        <div className="hidden lg:block">
-          <div
-            className="absolute left-0 top-8 w-52 h-[calc(100%-2rem)] z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
-            onClick={() => navigate(-1)}
-            onMouseDown={() => setIsPressed(true)}
-            onMouseUp={() => setIsPressed(false)}
-          />
-          <div
-            className="absolute right-0 top-8 w-52 h-[calc(100%-2rem)] z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
-            onClick={() => navigate(1)}
-            onMouseDown={() => setIsPressed(true)}
-            onMouseUp={() => setIsPressed(false)}
-          />
-        </div>
-
         {/* Main Photo Container */}
         {isImageLoading && (
           <div className="absolute inset-0 z-10 h-[calc(100%-2rem)] lg:h-full flex items-center justify-center">
             <PixelatedLoader />
           </div>
         )}
-        <div className="z-20 relative w-full h-[calc(100%-2rem)] max-h-[80vh] lg:h-full flex items-center justify-center">
+        <div className="z-20 relative w-full h-full lg:h-full lg:mt-8 flex items-center justify-center">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentPhotoIndex}
@@ -165,7 +149,7 @@ export function PhotoCarousel() {
                 alt={photos[currentPhotoIndex].alt}
                 fill
                 priority
-                sizes="(min-width: 1024px) 75vw, 100vw"
+                sizes="(max-width: 768px) 100vw, 75vw"
                 className="object-scale-down"
                 draggable={false}
                 onLoad={handleImageLoad}
@@ -176,50 +160,68 @@ export function PhotoCarousel() {
           </AnimatePresence>
         </div>
 
-        {/* Mobile Progress Bar Container */}
-        <div className="lg:hidden absolute left-0 right-0 bottom-4 flex items-center justify-center">
-          <div className="w-48 flex justify-between">
-            {photos.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setDirection(index > currentPhotoIndex ? 1 : -1);
-                  setCurrentPhotoIndex(index);
-                }}
-                className={`w-full h-6 ${
-                  index === currentPhotoIndex
-                    ? "bg-stone-400/30"
-                    : "bg-stone-400/10"
-                }`}
-              />
-            ))}
+        <div className="hidden lg:block">
+          {/* Navigation Zones with Click Handlers - Desktop Only */}
+          <div>
+            <div
+              className="absolute left-0 top-8 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
+              onClick={() => navigate(-1)}
+              onMouseDown={() => setIsPressed(true)}
+              onMouseUp={() => setIsPressed(false)}
+            />
+            <div
+              className="absolute right-0 top-8 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
+              onClick={() => navigate(1)}
+              onMouseDown={() => setIsPressed(true)}
+              onMouseUp={() => setIsPressed(false)}
+            />
           </div>
-        </div>
 
-        {/* Cursor Indicators - Desktop Only */}
-        <AnimatePresence>
-          {hoverZone && (
-            <motion.div
-              className="z-30 fixed text-stone-900 px-4 py-2 rounded-full pointer-events-none hidden lg:block"
-              style={{
-                left: `${mousePosition.x - 30}px`,
-                top: `${mousePosition.y - 20}px`,
-                transform: "translate(-50%, -50%)",
+          {/* Cursor Indicators - Desktop Only */}
+          <AnimatePresence>
+            {hoverZone && (
+              <motion.div
+                className="z-30 fixed text-stone-900 px-4 py-2 rounded-full pointer-events-none"
+                style={{
+                  left: `${mousePosition.x - 30}px`,
+                  top: `${mousePosition.y - 20}px`,
+                  transform: "translate(-50%, -50%)",
+                }}
+                initial="initial"
+                animate={isPressed ? "pressed" : "animate"}
+                exit="exit"
+                variants={indicatorVariants}
+                transition={{ duration: 0.25 }}
+              >
+                {hoverZone === "prev" ? (
+                  <ChevronLeft className="w-12 h-12" />
+                ) : (
+                  <ChevronRight className="w-12 h-12" />
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Mobile Progress Bar Container */}
+      <div className="flex lg:hidden items-center justify-center py-4">
+        <div className="w-1/2 flex justify-between">
+          {photos.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setDirection(index > currentPhotoIndex ? 1 : -1);
+                setCurrentPhotoIndex(index);
               }}
-              initial="initial"
-              animate={isPressed ? "pressed" : "animate"}
-              exit="exit"
-              variants={indicatorVariants}
-              transition={{ duration: 0.25 }}
-            >
-              {hoverZone === "prev" ? (
-                <ChevronLeft className="w-12 h-12" />
-              ) : (
-                <ChevronRight className="w-12 h-12" />
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              className={`w-full h-2 ${
+                index === currentPhotoIndex
+                  ? "bg-stone-400/30"
+                  : "bg-stone-400/10"
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Desktop Progress Bar */}
