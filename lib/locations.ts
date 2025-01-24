@@ -153,13 +153,6 @@ const locations: Location[] = [
         location: "Mexico",
         preloaded: false,
       },
-      {
-        src: `${S3_BUCKET_URL}/mexico/mexico_4.jpg`,
-        alt: "Mexico",
-        id: 4,
-        location: "Mexico",
-        preloaded: false,
-      },
     ],
   },
   {
