@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
@@ -15,7 +15,6 @@ export function PhotoCarousel() {
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
-  const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
 
   const photos = currentLocation.photos;
 
@@ -33,7 +32,9 @@ export function PhotoCarousel() {
 
   const navigate = (newDirection: number) => {
     setDirection(newDirection);
-    setLoadStartTime(Date.now());
+
+    setIsImageLoading(true);
+
     //@ts-expect-error - TS doesn't like the function signature
     setCurrentPhotoIndex((prev: number) => {
       const nextIndex = prev + newDirection;
@@ -45,23 +46,7 @@ export function PhotoCarousel() {
 
   const handleImageLoad = () => {
     setIsImageLoading(false);
-    setLoadStartTime(null);
   };
-
-  // Effect to manage loading state based on time
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
-    if (loadStartTime) {
-      timeoutId = setTimeout(() => {
-        setIsImageLoading(true);
-      }, 500); // Delay before showing loader
-    }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [loadStartTime]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -167,7 +152,7 @@ export function PhotoCarousel() {
                   sizes="(min-width: 1024px) 75vw, 100vw"
                   className="object-scale-down"
                   draggable={false}
-                  onLoadingComplete={handleImageLoad}
+                  onLoad={handleImageLoad}
                   placeholder="blur"
                   blurDataURL={`${photos[currentPhotoIndex].src}?w=10&h=10&blur=20`}
                 />

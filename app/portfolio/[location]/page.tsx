@@ -5,10 +5,12 @@ import { notFound } from "next/navigation";
 export default async function Page({
   params,
 }: {
-  params: { location: string };
+  params: Promise<{ location: string }>;
 }) {
   try {
-    const locationData = await getLocationData((await params).location);
+    const location = (await params).location;
+
+    const locationData = await getLocationData(location);
 
     if (!locationData) {
       notFound();
@@ -25,9 +27,11 @@ export default async function Page({
 export async function generateMetadata({
   params,
 }: {
-  params: { location: string };
+  params: Promise<{ location: string }>;
 }) {
-  const locationData = await getLocationData((await params).location);
+  const location = (await params).location;
+
+  const locationData = await getLocationData(location);
 
   return {
     title: `${locationData?.name || "Location"} Portfolio`,
