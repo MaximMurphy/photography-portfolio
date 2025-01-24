@@ -44,7 +44,7 @@ export default function Home() {
   const positions = isMobile ? mobilePositions : desktopPositions;
 
   return (
-    <div className="relative w-full h-[100dvh] overflow-hidden bg-green-950 text-stone-300">
+    <div className="relative w-full h-full overflow-hidden bg-green-950 text-stone-300">
       {[
         "ireland",
         "uk",
