@@ -153,8 +153,6 @@ export function PhotoCarousel() {
                 className="object-scale-down"
                 draggable={false}
                 onLoad={handleImageLoad}
-                placeholder="blur"
-                blurDataURL={`${photos[currentPhotoIndex].src}?w=10&h=10&blur=20`}
               />
             </motion.div>
           </AnimatePresence>
