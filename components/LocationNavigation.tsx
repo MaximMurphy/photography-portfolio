@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export function LocationNavigation() {
   const router = useRouter();
-  const { currentLocation, currentPhotoIndex } = usePortfolio();
+  const { currentLocation } = usePortfolio();
   const locations = getAllLocations();
 
   const navigateToNextLocation = () => {
@@ -21,9 +21,6 @@ export function LocationNavigation() {
 
     router.push(`/portfolio/${nextLocation.slug}`);
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const currentSubLocation = currentLocation.photos[currentPhotoIndex].location;
 
   return (
     <div className="px-2 lg:px-4 py-2 text-xl md:text-2xl font-base tracking-widest text-stone-800">

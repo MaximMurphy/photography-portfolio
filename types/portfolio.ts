@@ -9,7 +9,7 @@ export interface Photo {
 export interface Location {
   slug: string;
   name: string;
-  photos: Photo[];
+  photoCount: number;
 }
 
 export interface PortfolioProps {

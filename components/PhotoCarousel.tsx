@@ -5,7 +5,6 @@ import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import PixelatedLoader from "./PixelatedLoader";
 
 export function PhotoCarousel() {
   const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
@@ -14,9 +13,16 @@ export function PhotoCarousel() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
-  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [isMainImageLoaded, setIsMainImageLoaded] = useState(false);
 
-  const photos = currentLocation.photos;
+  // Generate image sources based on index
+  const getImageSources = (index: number) => {
+    const adjustedIndex = index + 1; // Since images start at 1
+    return {
+      main: `https://35mm-images.s3.us-east-2.amazonaws.com/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.jpg`,
+      thumbnail: `/photos/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.webp`,
+    };
+  };
 
   const fadeVariants = {
     initial: { opacity: 0 },
@@ -26,13 +32,13 @@ export function PhotoCarousel() {
 
   const navigate = (newDirection: number) => {
     setDirection(newDirection);
-    setIsImageLoading(true);
+    setIsMainImageLoaded(false);
 
-    //@ts-expect-error - TS doenst like the number type here
+    //@ts-expect-error dont worry about a thing
     setCurrentPhotoIndex((prev: number) => {
       const nextIndex = prev + newDirection;
-      if (nextIndex >= photos.length) return 0;
-      if (nextIndex < 0) return photos.length - 1;
+      if (nextIndex >= currentLocation.photoCount) return 0;
+      if (nextIndex < 0) return currentLocation.photoCount - 1;
       return nextIndex;
     });
   };
@@ -49,16 +55,10 @@ export function PhotoCarousel() {
     const swipe = swipePower(offset.x, velocity.x);
 
     if (swipe < -swipeConfidenceThreshold) {
-      // Swipe left, go to next
       navigate(1);
     } else if (swipe > swipeConfidenceThreshold) {
-      // Swipe right, go to previous
       navigate(-1);
     }
-  };
-
-  const handleImageLoad = () => {
-    setIsImageLoading(false);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -121,14 +121,7 @@ export function PhotoCarousel() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Main content wrapper */}
       <div className="relative h-full">
-        {/* Main Photo Container */}
-        {isImageLoading && (
-          <div className="absolute inset-0 z-10 h-[calc(100%-2rem)] lg:h-full flex items-center justify-center">
-            <PixelatedLoader />
-          </div>
-        )}
         <div className="z-20 relative w-full h-full lg:h-full lg:mt-8 flex items-center justify-center">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
@@ -144,22 +137,37 @@ export function PhotoCarousel() {
               onDragEnd={handleDragEnd}
               className="absolute w-5/6 lg:w-3/4 h-full"
             >
+              {/* Thumbnail Image */}
               <Image
-                src={photos[currentPhotoIndex].src}
-                alt={photos[currentPhotoIndex].alt}
+                src={getImageSources(currentPhotoIndex).thumbnail}
+                alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 75vw"
-                className="object-scale-down"
+                className={` transition-opacity duration-300 ${
+                  isMainImageLoaded ? "opacity-0" : "opacity-100"
+                }`}
                 draggable={false}
-                onLoad={handleImageLoad}
+              />
+
+              {/* Main Image */}
+              <Image
+                src={getImageSources(currentPhotoIndex).main}
+                alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 75vw"
+                className={`object-scale-down transition-opacity duration-300 ${
+                  isMainImageLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                draggable={false}
+                onLoad={() => setIsMainImageLoaded(true)}
               />
             </motion.div>
           </AnimatePresence>
         </div>
 
         <div className="hidden lg:block">
-          {/* Navigation Zones with Click Handlers - Desktop Only */}
           <div>
             <div
               className="absolute left-0 top-8 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
@@ -175,7 +183,6 @@ export function PhotoCarousel() {
             />
           </div>
 
-          {/* Cursor Indicators - Desktop Only */}
           <AnimatePresence>
             {hoverZone && (
               <motion.div
@@ -202,43 +209,47 @@ export function PhotoCarousel() {
         </div>
       </div>
 
-      {/* Mobile Progress Bar Container */}
+      {/* Mobile Progress Bar */}
       <div className="flex lg:hidden items-center justify-center py-4">
         <div className="w-1/2 flex justify-between">
-          {photos.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setDirection(index > currentPhotoIndex ? 1 : -1);
-                setCurrentPhotoIndex(index);
-              }}
-              className={`w-full h-2 ${
-                index === currentPhotoIndex
-                  ? "bg-stone-400/30"
-                  : "bg-stone-400/10"
-              }`}
-            />
-          ))}
+          {Array.from({ length: currentLocation.photoCount }).map(
+            (_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setDirection(index > currentPhotoIndex ? 1 : -1);
+                  setCurrentPhotoIndex(index);
+                }}
+                className={`w-full h-2 ${
+                  index === currentPhotoIndex
+                    ? "bg-stone-400/30"
+                    : "bg-stone-400/10"
+                }`}
+              />
+            )
+          )}
         </div>
       </div>
 
       {/* Desktop Progress Bar */}
       <div className="hidden lg:flex items-center justify-center py-4">
         <div className="w-1/2 flex justify-between">
-          {photos.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setDirection(index > currentPhotoIndex ? 1 : -1);
-                setCurrentPhotoIndex(index);
-              }}
-              className={`w-full h-2 ${
-                index === currentPhotoIndex
-                  ? "bg-stone-400/30"
-                  : "bg-stone-400/10"
-              }`}
-            />
-          ))}
+          {Array.from({ length: currentLocation.photoCount }).map(
+            (_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setDirection(index > currentPhotoIndex ? 1 : -1);
+                  setCurrentPhotoIndex(index);
+                }}
+                className={`w-full h-2 ${
+                  index === currentPhotoIndex
+                    ? "bg-stone-400/30"
+                    : "bg-stone-400/10"
+                }`}
+              />
+            )
+          )}
         </div>
       </div>
     </div>
