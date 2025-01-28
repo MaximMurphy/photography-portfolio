@@ -144,7 +144,7 @@ export function PhotoCarousel() {
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 75vw"
-                className={` transition-opacity duration-300 ${
+                className={`object-scale-down transition-opacity duration-300 ${
                   isMainImageLoaded ? "opacity-0" : "opacity-100"
                 }`}
                 draggable={false}
