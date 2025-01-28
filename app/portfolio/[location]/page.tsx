@@ -34,7 +34,7 @@ export async function generateMetadata({
   const locationData = await getLocationData(location);
 
   return {
-    title: `${locationData?.name || "Location"} Portfolio`,
-    description: `Photography portfolio of ${locationData?.name || "location"}`,
+    title: `Photos from ${locationData?.name || "Location"}`,
+    description: `35mm photos from ${locationData?.name || "location"}`,
   };
 }
