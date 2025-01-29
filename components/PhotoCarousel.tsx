@@ -142,6 +142,7 @@ export function PhotoCarousel() {
                 src={getImageSources(currentPhotoIndex).thumbnail}
                 alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
                 fill
+                sizes="100vw"
                 priority
                 className={`object-contain transition-opacity duration-300 ${
                   isMainImageLoaded ? "opacity-0" : "opacity-100"
@@ -154,6 +155,7 @@ export function PhotoCarousel() {
                 src={getImageSources(currentPhotoIndex).main}
                 alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
                 fill
+                sizes="100vw"
                 priority
                 className={`object-contain transition-opacity duration-300 ${
                   isMainImageLoaded ? "opacity-100" : "opacity-0"
