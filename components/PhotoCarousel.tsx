@@ -143,8 +143,7 @@ export function PhotoCarousel() {
                 alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
                 fill
                 priority
-                sizes="(max-width: 768px) 100vw, 75vw"
-                className={`object-scale-down transition-opacity duration-300 ${
+                className={`object-contain transition-opacity duration-300 ${
                   isMainImageLoaded ? "opacity-0" : "opacity-100"
                 }`}
                 draggable={false}
@@ -156,8 +155,7 @@ export function PhotoCarousel() {
                 alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
                 fill
                 priority
-                sizes="(max-width: 768px) 100vw, 75vw"
-                className={`object-scale-down transition-opacity duration-300 ${
+                className={`object-contain transition-opacity duration-300 ${
                   isMainImageLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 draggable={false}
