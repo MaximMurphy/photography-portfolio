@@ -5,6 +5,7 @@ import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import PixelatedLoader from "./PixelatedLoader";
 
 export function PhotoCarousel() {
   const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
@@ -14,10 +15,10 @@ export function PhotoCarousel() {
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
   const [isPressed, setIsPressed] = useState(false);
   const [isMainImageLoaded, setIsMainImageLoaded] = useState(false);
+  const [isThumbLoaded, setIsThumbLoaded] = useState(false);
 
-  // Generate image sources based on index
   const getImageSources = (index: number) => {
-    const adjustedIndex = index + 1; // Since images start at 1
+    const adjustedIndex = index + 1;
     return {
       main: `https://35mm-images.s3.us-east-2.amazonaws.com/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.jpg`,
       thumbnail: `/photos/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.webp`,
@@ -33,6 +34,7 @@ export function PhotoCarousel() {
   const navigate = (newDirection: number) => {
     setDirection(newDirection);
     setIsMainImageLoaded(false);
+    setIsThumbLoaded(false);
 
     //@ts-expect-error dont worry about a thing
     setCurrentPhotoIndex((prev: number) => {
@@ -43,6 +45,7 @@ export function PhotoCarousel() {
     });
   };
 
+  // ... (keeping all the other handlers the same)
   const swipeConfidenceThreshold = 10000;
   const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity;
@@ -137,36 +140,51 @@ export function PhotoCarousel() {
               onDragEnd={handleDragEnd}
               className="absolute w-5/6 lg:w-3/4 h-full"
             >
-              {/* Thumbnail Image */}
-              <Image
-                src={getImageSources(currentPhotoIndex).thumbnail}
-                alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
-                fill
-                sizes="100vw"
-                priority
-                className={`object-contain transition-opacity duration-300 ${
-                  isMainImageLoaded ? "opacity-0" : "opacity-100"
-                }`}
-                draggable={false}
-              />
+              <div className="relative w-full h-full">
+                {/* Immediate loading state - always visible until an image loads */}
+                <div
+                  className={`absolute inset-0 flex items-center justify-center bg-stone-100/5 transition-opacity duration-500 
+                    ${
+                      !isThumbLoaded && !isMainImageLoaded
+                        ? "opacity-100"
+                        : "opacity-0"
+                    }`}
+                >
+                  <PixelatedLoader />
+                </div>
 
-              {/* Main Image */}
-              <Image
-                src={getImageSources(currentPhotoIndex).main}
-                alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
-                fill
-                sizes="100vw"
-                priority
-                className={`object-contain transition-opacity duration-300 ${
-                  isMainImageLoaded ? "opacity-100" : "opacity-0"
-                }`}
-                draggable={false}
-                onLoad={() => setIsMainImageLoaded(true)}
-              />
+                {/* Thumbnail Image - stays visible until main image completely fades in */}
+                <Image
+                  src={getImageSources(currentPhotoIndex).thumbnail}
+                  alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
+                  fill
+                  sizes="100vw"
+                  priority
+                  className={`object-contain transition-opacity duration-500
+                    ${isThumbLoaded ? "opacity-100" : "opacity-0"}`}
+                  draggable={false}
+                  onLoad={() => setIsThumbLoaded(true)}
+                />
+
+                {/* Main Image - fades in over the thumbnail */}
+                <Image
+                  src={getImageSources(currentPhotoIndex).main}
+                  alt={`${currentLocation.name} photo ${currentPhotoIndex + 1}`}
+                  fill
+                  sizes="100vw"
+                  priority
+                  className={`object-contain transition-opacity duration-500 
+                    ${isMainImageLoaded ? "opacity-100" : "opacity-0"}`}
+                  style={{ mixBlendMode: "normal" }}
+                  draggable={false}
+                  onLoad={() => setIsMainImageLoaded(true)}
+                />
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>
 
+        {/* ... rest of the component stays the same ... */}
         <div className="hidden lg:block">
           <div>
             <div
