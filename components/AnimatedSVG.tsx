@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import MagneticEffect from "./MagneticEffect";
 
 interface AnimatedSvgProps {
   name: string;
@@ -30,19 +31,21 @@ export default function AnimatedSvg({ name, position }: AnimatedSvgProps) {
       }}
     >
       <Link href={`/portfolio/${name}`} className="block w-full h-full">
-        <motion.div
-          initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.25, delay: 0.25 }}
-        >
-          <Image
-            src={`/SVG/${name}.svg`}
-            alt={`SVG ${name}`}
-            width={150}
-            height={150}
-            className="w-full h-full cursor-pointer hover:scale-110 transition duration-500"
-          />
-        </motion.div>
+        <MagneticEffect>
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.25, delay: 0.25 }}
+          >
+            <Image
+              src={`/SVG/${name}.svg`}
+              alt={`SVG ${name}`}
+              width={150}
+              height={150}
+              className="w-full h-full cursor-pointer hover:scale-110 transition duration-500"
+            />
+          </motion.div>
+        </MagneticEffect>
       </Link>
     </motion.div>
   );
