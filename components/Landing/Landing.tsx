@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import AnimatedSvg from "./AnimatedSVG";
+import AnimatedSvg from "@/components/Landing/AnimatedSVG";
 
 const desktopPositions = [
   { top: "20%", left: "10%" },

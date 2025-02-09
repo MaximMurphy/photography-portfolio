@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/MagneticEffect.jsx"
+    "components/Landing/MagneticEffect.jsx"
   ],
   "exclude": ["node_modules"]
 }

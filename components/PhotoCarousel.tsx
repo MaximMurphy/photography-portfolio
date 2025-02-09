@@ -16,7 +16,6 @@ export function PhotoCarousel() {
   const [isPressed, setIsPressed] = useState(false);
   const [isMainImageLoaded, setIsMainImageLoaded] = useState(false);
   const [isThumbLoaded, setIsThumbLoaded] = useState(false);
-
   const getImageSources = (index: number) => {
     const adjustedIndex = index + 1;
     return {

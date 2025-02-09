@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import MagneticEffect from "./MagneticEffect";
+import MagneticEffect from "@/components/Landing/MagneticEffect";
 
 interface AnimatedSvgProps {
   name: string;
@@ -42,7 +42,7 @@ export default function AnimatedSvg({ name, position }: AnimatedSvgProps) {
               alt={`SVG ${name}`}
               width={150}
               height={150}
-              className="w-full h-full cursor-pointer hover:scale-110 transition duration-500"
+              className="w-full h-full cursor-none hover:scale-110 transition duration-500"
             />
           </motion.div>
         </MagneticEffect>
