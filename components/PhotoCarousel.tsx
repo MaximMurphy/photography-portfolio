@@ -20,7 +20,7 @@ export function PhotoCarousel() {
   const getImageSources = (index: number) => {
     const adjustedIndex = index + 1;
     return {
-      main: `https://35mm-images.s3.us-east-2.amazonaws.com/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.jpg`,
+      main: `${process.env.NEXT_PUBLIC_IMAGES_URL}/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.jpg`,
       thumbnail: `/photos/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.webp`,
     };
   };
