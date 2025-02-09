@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { usePortfolio } from "./PortfolioContext";
 import Image from "next/image";
@@ -16,13 +16,16 @@ export function PhotoCarousel() {
   const [isPressed, setIsPressed] = useState(false);
   const [isMainImageLoaded, setIsMainImageLoaded] = useState(false);
   const [isThumbLoaded, setIsThumbLoaded] = useState(false);
-  const getImageSources = (index: number) => {
-    const adjustedIndex = index + 1;
-    return {
-      main: `${process.env.NEXT_PUBLIC_IMAGES_URL}/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.jpg`,
-      thumbnail: `/photos/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.webp`,
-    };
-  };
+  const getImageSources = useCallback(
+    (index: number) => {
+      const adjustedIndex = index + 1;
+      return {
+        main: `${process.env.NEXT_PUBLIC_IMAGES_URL}/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.jpg`,
+        thumbnail: `/photos/${currentLocation.slug}/${currentLocation.slug}_${adjustedIndex}.webp`,
+      };
+    },
+    [currentLocation.slug]
+  );
 
   const fadeVariants = {
     initial: { opacity: 0 },
@@ -44,7 +47,42 @@ export function PhotoCarousel() {
     });
   };
 
-  // ... (keeping all the other handlers the same)
+  const preloadImage = (src: string) => {
+    return new Promise((resolve, reject) => {
+      const img = document.createElement("img");
+      const timeoutId = setTimeout(() => {
+        reject(new Error("Image load timeout"));
+      }, 5000); // 5 second timeout
+
+      img.onload = () => {
+        clearTimeout(timeoutId);
+        resolve(img);
+      };
+
+      img.onerror = () => {
+        clearTimeout(timeoutId);
+        reject(new Error("Image load failed"));
+      };
+
+      img.src = src;
+    }).catch((err) => {
+      console.warn(`Failed to preload image ${src}:`, err);
+    });
+  };
+
+  useEffect(() => {
+    const nextIndex = (currentPhotoIndex + 1) % currentLocation.photoCount;
+    const prevIndex =
+      currentPhotoIndex === 0
+        ? currentLocation.photoCount - 1
+        : currentPhotoIndex - 1;
+
+    preloadImage(getImageSources(nextIndex).main);
+    preloadImage(getImageSources(nextIndex).thumbnail);
+    preloadImage(getImageSources(prevIndex).main);
+    preloadImage(getImageSources(prevIndex).thumbnail);
+  }, [currentPhotoIndex, currentLocation, getImageSources]);
+
   const swipeConfidenceThreshold = 10000;
   const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity;
