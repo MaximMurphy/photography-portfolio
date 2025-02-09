@@ -8,8 +8,8 @@ export default function Framer({ children }) {
   const handleMouse = (e) => {
     const { clientX, clientY } = e;
     const { height, width, left, top } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
+    const middleX = (clientX - (left + width / 2)) * 2;
+    const middleY = (clientY - (top + height / 2)) * 2;
     setPosition({ x: middleX, y: middleY });
   };
 
