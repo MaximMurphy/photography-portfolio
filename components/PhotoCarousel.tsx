@@ -145,7 +145,7 @@ export function PhotoCarousel() {
       onMouseLeave={handleMouseLeave}
     >
       <div className="relative h-full">
-        <div className="z-20 relative w-full h-full lg:h-full lg:mt-8 flex items-center justify-center">
+        <div className="z-20 relative w-full h-full lg:h-full flex items-center justify-center">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentPhotoIndex}
@@ -195,13 +195,13 @@ export function PhotoCarousel() {
         <div className="hidden lg:block">
           <div>
             <div
-              className="absolute left-0 top-8 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
+              className="absolute left-0 top-0 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
               onClick={() => navigate(-1)}
               onMouseDown={() => setIsPressed(true)}
               onMouseUp={() => setIsPressed(false)}
             />
             <div
-              className="absolute right-0 top-8 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
+              className="absolute right-0 top-0 w-52 h-full z-30 cursor-none hover:bg-stone-400/20 transition-colors duration-200"
               onClick={() => navigate(1)}
               onMouseDown={() => setIsPressed(true)}
               onMouseUp={() => setIsPressed(false)}
@@ -223,9 +223,15 @@ export function PhotoCarousel() {
                 variants={indicatorVariants}
               >
                 {hoverZone === "prev" ? (
-                  <ChevronLeft strokeWidth={1} />
+                  <ChevronLeft
+                    strokeWidth={2}
+                    className="w-12 h-12 text-stone-900"
+                  />
                 ) : (
-                  <ChevronRight strokeWidth={1} />
+                  <ChevronRight
+                    strokeWidth={2}
+                    className="w-12 h-12 text-stone-900"
+                  />
                 )}
               </motion.div>
             )}
