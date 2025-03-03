@@ -12,13 +12,13 @@ export function LocationNavigation() {
   const { currentLocation } = usePortfolio();
   const locations = getAllLocations();
 
-  const navigateToNextLocation = () => {
-    const currentIndex = locations.findIndex(
-      (loc) => loc.slug === currentLocation.slug
-    );
-    const nextIndex = (currentIndex + 1) % locations.length;
-    const nextLocation = locations[nextIndex];
+  const currentIndex = locations.findIndex(
+    (loc) => loc.slug === currentLocation.slug
+  );
+  const nextIndex = (currentIndex + 1) % locations.length;
+  const nextLocation = locations[nextIndex];
 
+  const navigateToNextLocation = () => {
     router.push(`/portfolio/${nextLocation.slug}`);
   };
 

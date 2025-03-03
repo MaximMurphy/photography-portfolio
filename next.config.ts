@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
         hostname: "35mm-images.s3.us-east-2.amazonaws.com",
       },
     ],
+    formats: ["image/webp"],
+    minimumCacheTTL: 31536000, // 1 year caching for images
   },
 };
 
