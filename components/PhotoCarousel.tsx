@@ -7,8 +7,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function PhotoCarousel() {
-  const { currentLocation, currentPhotoIndex, setCurrentPhotoIndex } =
-    usePortfolio();
+  const { currentLocation, currentPhotoIndex } = usePortfolio();
   const [direction, setDirection] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoverZone, setHoverZone] = useState<"prev" | "next" | null>(null);
@@ -32,19 +31,6 @@ export function PhotoCarousel() {
     exit: { opacity: 0 },
   };
 
-  // Simple navigation function
-  const navigate = (newDirection: number) => {
-    setDirection(newDirection);
-    setIsMainImageLoaded(false);
-
-    setCurrentPhotoIndex((prev) => {
-      const nextIndex = prev + newDirection;
-      if (nextIndex >= currentLocation.photoCount) return 0;
-      if (nextIndex < 0) return currentLocation.photoCount - 1;
-      return nextIndex;
-    });
-  };
-
   // Simple preload for adjacent images
   useEffect(() => {
     // Preload next and previous images
@@ -64,6 +50,9 @@ export function PhotoCarousel() {
       const mainImg = new window.Image();
       mainImg.src = getImageSources(index).main;
     });
+
+    // Reset image loading state when photo changes
+    setIsMainImageLoaded(false);
   }, [currentPhotoIndex, currentLocation, getImageSources]);
 
   const swipePower = (offset: number, velocity: number) => {
@@ -78,9 +67,11 @@ export function PhotoCarousel() {
     const swipeConfidenceThreshold = 10000;
 
     if (swipe < -swipeConfidenceThreshold) {
-      navigate(1);
+      // Swipe left to right (next)
+      setDirection(1);
     } else if (swipe > swipeConfidenceThreshold) {
-      navigate(-1);
+      // Swipe right to left (prev)
+      setDirection(-1);
     }
   };
 
@@ -136,6 +127,20 @@ export function PhotoCarousel() {
       opacity: 0,
       scale: 0.5,
     },
+  };
+
+  // Use navigation functions from context
+  const { setCurrentPhotoIndex } = usePortfolio();
+
+  const navigate = (newDirection: number) => {
+    setDirection(newDirection);
+
+    setCurrentPhotoIndex((prev) => {
+      const nextIndex = prev + newDirection;
+      if (nextIndex >= currentLocation.photoCount) return 0;
+      if (nextIndex < 0) return currentLocation.photoCount - 1;
+      return nextIndex;
+    });
   };
 
   return (
