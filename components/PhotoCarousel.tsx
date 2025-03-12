@@ -64,14 +64,14 @@ export function PhotoCarousel() {
     { offset, velocity }: PanInfo
   ) => {
     const swipe = swipePower(offset.x, velocity.x);
-    const swipeConfidenceThreshold = 10000;
+    const swipeConfidenceThreshold = 5000;
 
     if (swipe < -swipeConfidenceThreshold) {
       // Swipe left to right (next)
-      setDirection(1);
+      navigate(1);
     } else if (swipe > swipeConfidenceThreshold) {
       // Swipe right to left (prev)
-      setDirection(-1);
+      navigate(-1);
     }
   };
 
