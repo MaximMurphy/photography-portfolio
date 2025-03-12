@@ -58,7 +58,7 @@ export function Portfolio({ initialLocation }: PortfolioProps) {
 
   return (
     <PortfolioProvider initialLocation={initialLocation}>
-      <div className="h-screen flex flex-col">
+      <div className="h-[100dvh] flex flex-col">
         <LocationNavigation />
         {isLoading ? (
           <div className="h-full flex justify-center items-center">

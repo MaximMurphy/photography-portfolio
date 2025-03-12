@@ -149,8 +149,8 @@ export function PhotoCarousel() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="relative h-full">
-        <div className="z-20 relative w-full h-full lg:h-full flex items-center justify-center">
+      <div className="relative flex-1 min-h-0">
+        <div className="z-20 relative w-full h-full flex items-center justify-center">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentPhotoIndex}
